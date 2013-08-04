@@ -1,0 +1,21 @@
+# Unity folders
+Library
+Temp
+
+# csharp and Unity project files
+*.csproj
+*.pidb
+*.unityproj
+*.sln
+*.userprefs
+*.cache
+*.suo
+
+# Mac OSX
+*.DS_Store
+
+# Framework folder (symlinked)
+Assets/CasperFramework
+
+# Modules (symlinked)
+Assets/Modules/NGUI
