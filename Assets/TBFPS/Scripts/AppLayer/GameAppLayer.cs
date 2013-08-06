@@ -8,7 +8,7 @@
 */
 
 using UnityEngine;
-using Casper.Framework.Core;
+using Casper.Framework;
 
 namespace Casper.TBFPS
 {
@@ -17,16 +17,18 @@ namespace Casper.TBFPS
 		// private methods
 		protected override void EnteredState(AppLayerState enteredState)
 		{
+			base.PreEnteredState(enteredState);
+			
 			switch (enteredState)
 			{
 			case AppLayerState.TRANSITIONING_ON:
-				// load game
+				LevelManager.Instance.GuaranteeExists();
 				
-				// decide what level we are loading -> get level ID from level manager
+				LevelManager.Instance.LoadAllLevelData();
 				
-				// load level prefab from resources
+				LevelManager.Instance.CurrentLevelData = LevelManager.Instance.GetLevelData("TestLevel1");
 				
-				// finished loading level data -> 
+				LevelManager.Instance.InstantiateLevelFromData(LevelManager.Instance.CurrentLevelData);
 				
 				break;
 				
@@ -52,7 +54,7 @@ namespace Casper.TBFPS
 				break;
 			}
 			
-			base.EnteredState(enteredState);
+			base.PostEnteredState(enteredState);
 		}
 	}
 }
