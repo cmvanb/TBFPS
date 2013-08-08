@@ -22,13 +22,7 @@ namespace Casper.TBFPS
 			switch (enteredState)
 			{
 			case AppLayerState.TRANSITIONING_ON:
-				LevelManager.Instance.GuaranteeExists();
-				
-				LevelManager.Instance.LoadAllLevelData();
-				
-				LevelManager.Instance.CurrentLevelData = LevelManager.Instance.GetLevelData("TestLevel1");
-				
-				LevelManager.Instance.InstantiateLevelFromData(LevelManager.Instance.CurrentLevelData);
+				// start game
 				
 				break;
 				
