@@ -98,14 +98,16 @@ namespace Casper.TBFPS
 				
 				// not allowed to move right away
 				m_activePlayer.PlayerMovementComponent.enabled = false;
+				
+				// show a help dialog
 				break;
 				
 			case GameState.OTHER_PLAYER_TURN:
-				Debug.LogError("Not implemented.");
+				DebugUtil.LogError("Not implemented.");
 				break;
 				
 			case GameState.GAME_OVER:
-				Debug.LogError("Not implemented.");
+				DebugUtil.LogError("Not implemented.");
 				break;
 			}
 		}
