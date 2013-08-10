@@ -11,6 +11,9 @@ Temp
 *.cache
 *.suo
 
+# Artwork source files
+*.psd
+
 # Mac OSX
 *.DS_Store
 
