@@ -12,15 +12,12 @@ using System.Collections.Generic;
 
 namespace Casper.TBFPS
 {
-	public class Entity : MonoBehaviour
+	public class PlayerEntity : Entity
 	{
 		// events
 		
 		// inspector vars
-		[SerializeField]
-		protected string m_name;
-		public string Name { get { return m_name; } }
-		
+	
 		// public vars
 		
 		// private vars

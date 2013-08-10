@@ -22,10 +22,16 @@ namespace Casper.TBFPS
 		// private vars
 		private GameState m_currentGameState = GameState.NONE;
 		
+		private List<PlayerEntity> m_players;
+		
 		// singleton callbacks
 		public override void Init() 
 		{
 			base.Init();
+			
+			m_players = new List<Entity>();
+			
+			FindPlayers();
 		}
 		
 		// unity callbacks
@@ -37,6 +43,20 @@ namespace Casper.TBFPS
 		// public methods
 		
 		// private methods
+		private void FindPlayers()
+		{
+			PlayerEntity[] scenePlayers = Object.FindObjectsOfType(typeof(PlayerEntity)) as PlayerEntity[];
+			
+			if (scenePlayers.Length > 0)
+			{
+				m_players.AddRange(scenePlayers);
+			}
+			else
+			{
+				DebugUtil.LogWarning("Couldn't find any entities in the scene!");
+			}
+		}
+		
 		private void UpdateGameState()		
 		{
 			switch (m_currentGameState)
