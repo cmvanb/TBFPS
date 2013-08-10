@@ -22,6 +22,10 @@ namespace Casper.TBFPS
 			switch (enteredState)
 			{
 			case AppLayerState.TRANSITIONING_ON:
+				CameraManager.Instance.GuaranteeExists();
+				
+				GameManager.Instance.GuaranteeExists();
+				
 				// start game
 				
 				break;

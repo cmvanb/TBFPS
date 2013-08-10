@@ -17,6 +17,13 @@ namespace Casper.TBFPS
 		// events
 		
 		// inspector vars
+		[SerializeField]
+		private bool m_isLocalPlayer;
+		public bool IsLocalPlayer { get { return m_isLocalPlayer; } }
+		
+		[SerializeField]
+		private PlayerMovement m_playerMovementComponent;
+		public PlayerMovement PlayerMovementComponent { get { return m_playerMovementComponent; } }
 	
 		// public vars
 		
