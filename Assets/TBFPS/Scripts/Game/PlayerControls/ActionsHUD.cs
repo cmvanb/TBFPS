@@ -17,8 +17,12 @@ namespace Casper.TBFPS
 		// events
 		
 		// inspector vars
+		[SerializeField]
+		private GameObject m_radialMenuElement;
 	
 		// public vars
+		private PlayerEntity m_localPlayer;
+		public PlayerEntity LocalPlayer { get { return m_localPlayer; } set { m_localPlayer = value; } }
 		
 		// private vars
 		private bool m_HUDVisible;
@@ -28,6 +32,11 @@ namespace Casper.TBFPS
 		// singleton callbacks
 		
 		// unity callbacks
+		void Awake()
+		{
+			HideHUD();
+		}
+		
 		void Update()
 		{
 			if (!m_HUDVisible
@@ -50,11 +59,25 @@ namespace Casper.TBFPS
 		// private methods
 		private void ShowHUD()
 		{
+			m_radialMenuElement.SetActive(true);
+			
+			if (m_localPlayer)
+			{
+				m_localPlayer.MouseLookComponent.enabled = false;
+			}
+			
 			m_HUDVisible = true;
 		}
 		
 		private void HideHUD()
 		{
+			m_radialMenuElement.SetActive(false);
+			
+			if (m_localPlayer)
+			{
+				m_localPlayer.MouseLookComponent.enabled = true;
+			}
+			
 			m_HUDVisible = false;
 		}
 	}

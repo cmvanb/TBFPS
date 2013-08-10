@@ -9,6 +9,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Casper.Framework;
 
 namespace Casper.TBFPS
 {
@@ -22,10 +23,16 @@ namespace Casper.TBFPS
 		public bool IsLocalPlayer { get { return m_isLocalPlayer; } }
 		
 		[SerializeField]
+		private MouseLook m_mouseLookComponent;
+		public MouseLook MouseLookComponent { get { return m_mouseLookComponent; } }
+		
+		[SerializeField]
 		private PlayerMovement m_playerMovementComponent;
 		public PlayerMovement PlayerMovementComponent { get { return m_playerMovementComponent; } }
 	
 		// public vars
+		private ActionsHUD m_localActionsHUD;
+		public ActionsHUD LocalActionsHUD { get { return m_localActionsHUD; } }
 		
 		// private vars
 		
@@ -34,6 +41,22 @@ namespace Casper.TBFPS
 		// singleton callbacks
 		
 		// unity callbacks
+		void Awake()
+		{
+			if (m_isLocalPlayer)
+			{
+				m_localActionsHUD = Object.FindObjectOfType(typeof(ActionsHUD)) as ActionsHUD;
+				
+				if (m_localActionsHUD != null)
+				{
+					m_localActionsHUD.LocalPlayer = this;
+				}
+				else
+				{
+					DebugUtil.LogError("Could not find local player's ActionsHUD");
+				}
+			}
+		}
 		
 		// public methods
 		
