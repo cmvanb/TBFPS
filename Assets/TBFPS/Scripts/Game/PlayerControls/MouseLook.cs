@@ -51,10 +51,7 @@ namespace Casper.TBFPS
 		
 		void Update()
 		{
-			if (Screen.lockCursor)
-			{
-				UpdateMouseLook();
-			}
+			UpdateMouseLook();
 			
 			Rotate();
 		}
