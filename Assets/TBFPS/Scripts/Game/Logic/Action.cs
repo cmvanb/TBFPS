@@ -14,13 +14,20 @@ namespace Casper.TBFPS
 {
 	public abstract class Action
 	{
-		// events
+		#region events
+		public delegate void ActionCompletedHandler(Action actionCompleted);
+		public event ActionCompletedHandler OnActionCompleted;
+		#endregion
 	
-		// public vars
-		
-		// private vars
+		#region private vars
+		protected PlayerEntity m_playerEntity;
+		#endregion
 		
 		// constructor
+		public Action(PlayerEntity playerEntity)
+		{
+			m_playerEntity = playerEntity;
+		}		
 		
 		// unity callbacks
 		
@@ -28,8 +35,17 @@ namespace Casper.TBFPS
 		public abstract void Start();
 		
 		public abstract void Update();
-				
-		public abstract void Finish();
+		
+		/// <summary>
+		/// Finish this action. Triggers the OnActionCompleted event.
+		/// </summary>
+		public virtual void Finish()
+		{
+			if (OnActionCompleted != null)
+			{
+				OnActionCompleted(this);
+			}
+		}
 		
 		// private methods
 	}

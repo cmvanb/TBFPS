@@ -16,28 +16,33 @@ namespace Casper.TBFPS
 	public class ActionsHUD : MonoBehaviour
 	{
 		// events
+		public delegate void SelectedActionHandler(int index);
+		public event SelectedActionHandler OnSelectedAction;
 		
-		// inspector vars
+		#region inspector vars
 		[SerializeField]
 		private GameObject m_radialMenuElement;
 		
 		[SerializeField]
 		private GameObject m_selectionArrowPivot;
+		#endregion
 		
 		// constants
 		private readonly float c_minMouseDistanceForSelection = Screen.height / 21f; // 50 pixels on a 1680x1050 res
 	
-		// public vars
+		#region public vars
 		private PlayerEntity m_localPlayer;
 		public PlayerEntity LocalPlayer { get { return m_localPlayer; } set { m_localPlayer = value; } }
 		
 		private int m_selectedActionIndex;
 		public int SelectedActionIndex { get { return m_selectedActionIndex; } }
+		#endregion
 		
-		// private vars
+		#region private vars
 		private bool m_HUDActive;
 		
 		private Vector2 m_mouseCenterPoint;
+		#endregion
 		
 		// constructor
 		
@@ -65,6 +70,13 @@ namespace Casper.TBFPS
 				&& Input.GetMouseButtonUp(0))
 			{
 				// did we select something? if so do something
+				if (m_selectedActionIndex != -1)
+				{
+					if (OnSelectedAction != null)
+					{
+						OnSelectedAction(m_selectedActionIndex);
+					}
+				}
 				
 				HideHUD();
 			}
@@ -73,6 +85,11 @@ namespace Casper.TBFPS
 			{
 				CalculateSelection();
 			}
+		}
+		
+		void OnDisable()
+		{
+			HideHUD();
 		}
 		
 		// public methods

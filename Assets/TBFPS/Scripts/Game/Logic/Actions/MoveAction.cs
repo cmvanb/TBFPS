@@ -15,15 +15,13 @@ namespace Casper.TBFPS
 {
 	public class MoveAction : Action
 	{
-		// events
-		
-		// inspector vars
-	
-		// public vars
-		
-		// private vars
+		#region private vars
+		#endregion
 		
 		// constructor
+		public MoveAction(PlayerEntity playerEntity) : base(playerEntity)
+		{
+		}
 		
 		// singleton callbacks
 		
@@ -32,16 +30,26 @@ namespace Casper.TBFPS
 		// public methods
 		public override void Start()
 		{
-			DebugUtil.Log("Started move action");
+			DebugUtil.Log(this.GetType().Name + " started");
+			
+			m_playerEntity.PlayerMovementComponent.enabled = true;
+			
+			m_playerEntity.PlayerMovementComponent.OnMovementCompleted += Finish;
 		}
 		
 		public override void Update()
 		{
 		}
-				
+		
 		public override void Finish()
 		{
-			DebugUtil.Log("Finished move action");
+			DebugUtil.Log(this.GetType().Name + " finished");
+			
+			m_playerEntity.PlayerMovementComponent.OnMovementCompleted -= Finish;
+			
+			m_playerEntity.PlayerMovementComponent.enabled = false;
+			
+			base.Finish();
 		}
 		
 		// private methods

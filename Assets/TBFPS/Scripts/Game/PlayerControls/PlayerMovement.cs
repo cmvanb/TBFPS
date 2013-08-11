@@ -9,14 +9,18 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Casper.Framework;
 
 namespace Casper.TBFPS
 {
 	public class PlayerMovement : MonoBehaviour
 	{
-		// events
-	
-		// inspector vars
+		#region events
+		public delegate void MovementCompletedHandler();
+		public event MovementCompletedHandler OnMovementCompleted;
+		#endregion
+		
+		#region inspector vars
 		[SerializeField]
 		private Transform m_playerBody;
 		
@@ -32,18 +36,38 @@ namespace Casper.TBFPS
 		[SerializeField]
 		private float m_deceleration;
 		
-		// public vars
+		/// <summary>
+		/// The maximum distance the player is allowed to move in the current action.
+		/// </summary>
+		[SerializeField]
+		private float m_maxDistance;
+		#endregion
 		
-		// private vars
+		#region private vars
 		private Vector3 m_inputVector;
 		
 		private Vector3 m_lastInputVector;
 		
 		private Vector3 m_movementVector;
 		
+		private Vector3 m_previousPosition;
+		
 		private float m_speed;
 		
+		/// <summary>
+		/// The movement progress expressed as a value between 0f and 1f. When this reaches 1f the movement action is complete.
+		/// </summary>
+		private float m_movementProgress;
+		
+		private float m_distanceMoved;
+		#endregion
+		
 		// unity callbacks
+		void OnEnable()
+		{
+			Reset();
+		}
+		
 		void Update()
 		{
 			UpdateInput();
@@ -53,6 +77,8 @@ namespace Casper.TBFPS
 			UpdateMovement();
 			
 			Move();
+			
+			UpdateMovementProgress();
 		}
 		
 		// public methods
@@ -92,7 +118,35 @@ namespace Casper.TBFPS
 		
 		private void Move()
 		{
+			m_previousPosition = m_playerBody.position;
+			
 			m_characterController.Move(m_movementVector);
+			
+			m_distanceMoved += Vector3.Distance(m_previousPosition, m_playerBody.position);
+		}
+		
+		private void UpdateMovementProgress()
+		{
+			m_movementProgress = m_distanceMoved / m_maxDistance;
+			
+			if (m_movementProgress > 1f)
+			{
+				if (OnMovementCompleted != null)
+				{
+					OnMovementCompleted();
+				}
+			}			
+		}
+		
+		private void Reset()
+		{
+			m_previousPosition = m_playerBody.position;
+			
+			m_speed = 0f;
+			
+			m_movementProgress = 0f;
+			
+			m_distanceMoved = 0f;
 		}
 	}
 }

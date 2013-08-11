@@ -17,7 +17,7 @@ namespace Casper.TBFPS
 	{
 		// events
 		
-		// inspector vars
+		#region inspector vars
 		[SerializeField]
 		private bool m_isLocalPlayer;
 		public bool IsLocalPlayer { get { return m_isLocalPlayer; } }
@@ -29,12 +29,24 @@ namespace Casper.TBFPS
 		[SerializeField]
 		private PlayerMovement m_playerMovementComponent;
 		public PlayerMovement PlayerMovementComponent { get { return m_playerMovementComponent; } }
-	
-		// public vars
+		
+		[SerializeField]
+		private Transform m_cameraTransform;
+		
+		[SerializeField]
+		private Transform m_playerModel;
+		#endregion
+		
+		#region public vars
 		private ActionsHUD m_localActionsHUD;
 		public ActionsHUD LocalActionsHUD { get { return m_localActionsHUD; } }
 		
-		// private vars
+		private int m_actionPoints;
+		public int ActionPoints { get { return m_actionPoints; } set { m_actionPoints = value; } }
+		#endregion
+		
+		#region private vars
+		#endregion
 		
 		// constructor
 		
@@ -55,6 +67,29 @@ namespace Casper.TBFPS
 				{
 					DebugUtil.LogError("Could not find local player's ActionsHUD");
 				}
+				
+				CameraManager.Instance.GuaranteeExists();
+				
+				if (CameraManager.Instance.GameCamera != null)
+				{
+					CameraManager.Instance.GameCamera.transform.parent = m_cameraTransform;
+					CameraManager.Instance.GameCamera.transform.localPosition = Vector3.zero;
+					CameraManager.Instance.GameCamera.transform.localRotation = Quaternion.identity;
+				}
+				else
+				{
+					DebugUtil.LogError("Could not find GameCamera");
+				}
+				
+				m_mouseLookComponent.enabled = true;
+				m_playerMovementComponent.enabled = false;
+				
+				LayerUtil.ChangeLayersRecursively(m_playerModel, "Player");
+			}
+			else
+			{
+				m_mouseLookComponent.enabled = false;
+				m_playerMovementComponent.enabled = false;
 			}
 		}
 		

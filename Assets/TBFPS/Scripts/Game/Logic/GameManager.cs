@@ -17,14 +17,17 @@ namespace Casper.TBFPS
 	{
 		// events
 	
-		// public vars
-		
-		// private vars
+		#region private vars
 		private GameState m_currentGameState = GameState.NONE;
 		
 		private List<PlayerEntity> m_players;
 		
 		private PlayerEntity m_activePlayer;
+		
+		private Action m_currentAction;
+		
+		private int m_actionPointsPerTurn = 2;
+		#endregion
 		
 		// singleton callbacks
 		public override void Init() 
@@ -32,11 +35,14 @@ namespace Casper.TBFPS
 			base.Init();
 			
 			m_players = new List<PlayerEntity>();
-			
-			SetGameState(GameState.LIMBO);
 		}
 		
 		// unity callbacks
+		void Start()
+		{
+			SetGameState(GameState.LIMBO);
+		}
+		
 		void Update()
 		{
 			UpdateGameState();
@@ -47,24 +53,34 @@ namespace Casper.TBFPS
 		{
 			m_currentGameState = newState;
 			
+			DebugUtil.Log(this.GetType().Name + " changed game state to " + m_currentGameState.ToString());
+			
 			EnterGameState(newState);
 		}
 		
-		// private methods
-		private void FindPlayers()
+		public void ActionsHUDSelectedAction(int index)
 		{
-			PlayerEntity[] scenePlayers = Object.FindObjectsOfType(typeof(PlayerEntity)) as PlayerEntity[];
+			if (index == 0)
+			{
+				DebugUtil.Log(this.GetType().Name + " selected move action");
 			
-			if (scenePlayers.Length > 0)
-			{
-				m_players.AddRange(scenePlayers);
+				StartAction(new MoveAction(m_activePlayer));
 			}
-			else
+			else if (index == 1)
 			{
-				DebugUtil.LogWarning("Couldn't find any player entities in the scene!");
+				DebugUtil.Log(this.GetType().Name + " selected attack action");
 			}
+			else if (index == 2)
+			{
+				DebugUtil.Log(this.GetType().Name + " selected cover action");
+			}
+			
+			m_activePlayer.LocalActionsHUD.enabled = false;
+			
+			m_activePlayer.ActionPoints -= 1;
 		}
 		
+		// private methods
 		private void EnterGameState(GameState enteredState)
 		{
 			switch (enteredState)
@@ -81,6 +97,17 @@ namespace Casper.TBFPS
 				if (m_players.Count > 0)
 				{
 					m_activePlayer = m_players[0];
+					
+					foreach (PlayerEntity player in m_players)
+					{
+						if (player != m_activePlayer)
+						{
+							if (player.IsLocalPlayer)
+							{
+								player.LocalActionsHUD.enabled = false;
+							}
+						}
+					}
 				}
 				
 				if (m_activePlayer.IsLocalPlayer)
@@ -91,19 +118,21 @@ namespace Casper.TBFPS
 				{
 					SetGameState(GameState.OTHER_PLAYER_TURN);
 				}
+				
+				m_activePlayer.ActionPoints = m_actionPointsPerTurn;
 				break;
 				
 			case GameState.LOCAL_PLAYER_TURN:
-				// start active player turn
-				
 				// not allowed to move right away
 				m_activePlayer.PlayerMovementComponent.enabled = false;
 				
-				// show a help dialog
+				// listen for actions
+				m_activePlayer.LocalActionsHUD.OnSelectedAction += ActionsHUDSelectedAction;
 				break;
 				
 			case GameState.OTHER_PLAYER_TURN:
-				DebugUtil.LogError("Not implemented.");
+				// not allowed to move right away
+				m_activePlayer.PlayerMovementComponent.enabled = false;
 				break;
 				
 			case GameState.GAME_OVER:
@@ -125,6 +154,10 @@ namespace Casper.TBFPS
 				
 			case GameState.LOCAL_PLAYER_TURN:
 				// update active player turn
+				if (m_currentAction != null)
+				{
+					m_currentAction.Update();
+				}
 				break;
 				
 			case GameState.OTHER_PLAYER_TURN:
@@ -132,6 +165,49 @@ namespace Casper.TBFPS
 				
 			case GameState.GAME_OVER:
 				break;
+			}
+		}
+		
+		private void StartAction(Action action)
+		{
+			m_currentAction = action;
+			
+			m_currentAction.Start();
+			
+			m_currentAction.OnActionCompleted += FinishAction;
+		}
+		
+		private void FinishAction(Action actionCompleted)
+		{			
+			m_currentAction.OnActionCompleted -= FinishAction;
+			
+			m_currentAction = null;
+
+			if (m_activePlayer.ActionPoints <= 0)
+			{
+				// end turn
+			}
+			else
+			{
+				m_activePlayer.LocalActionsHUD.enabled = true;
+			}
+		}
+		
+		private void EndTurn()
+		{
+		}
+		
+		private void FindPlayers()
+		{
+			PlayerEntity[] scenePlayers = Object.FindObjectsOfType(typeof(PlayerEntity)) as PlayerEntity[];
+			
+			if (scenePlayers.Length > 0)
+			{
+				m_players.AddRange(scenePlayers);
+			}
+			else
+			{
+				DebugUtil.LogWarning("Couldn't find any player entities in the scene!");
 			}
 		}
 	}
