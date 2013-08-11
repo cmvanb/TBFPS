@@ -62,7 +62,7 @@ namespace Casper.TBFPS
 		private float m_distanceMoved;
 		#endregion
 		
-		// unity callbacks
+		#region unity callbacks
 		void OnEnable()
 		{
 			Reset();
@@ -80,10 +80,9 @@ namespace Casper.TBFPS
 			
 			UpdateMovementProgress();
 		}
+		#endregion
 		
-		// public methods
-		
-		// private methods
+		#region private methods
 		private void UpdateInput()
 		{
 			float inputX = Input.GetAxisRaw("Horizontal") * Time.timeScale;
@@ -148,5 +147,6 @@ namespace Casper.TBFPS
 			
 			m_distanceMoved = 0f;
 		}
+		#endregion
 	}
 }

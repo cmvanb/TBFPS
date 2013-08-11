@@ -31,6 +31,10 @@ namespace Casper.TBFPS
 		public PlayerMovement PlayerMovementComponent { get { return m_playerMovementComponent; } }
 		
 		[SerializeField]
+		private PlayerAim m_playerAimComponent;
+		public PlayerAim PlayerAimComponent { get { return m_playerAimComponent; } }
+		
+		[SerializeField]
 		private Transform m_cameraTransform;
 		
 		[SerializeField]
@@ -57,6 +61,7 @@ namespace Casper.TBFPS
 		{
 			if (m_isLocalPlayer)
 			{
+				// link HUD
 				m_localActionsHUD = Object.FindObjectOfType(typeof(ActionsHUD)) as ActionsHUD;
 				
 				if (m_localActionsHUD != null)
@@ -68,11 +73,14 @@ namespace Casper.TBFPS
 					DebugUtil.LogError("Could not find local player's ActionsHUD");
 				}
 				
+				// link game camera
 				CameraManager.Instance.GuaranteeExists();
 				
 				if (CameraManager.Instance.GameCamera != null)
 				{
 					CameraManager.Instance.GameCamera.transform.parent = m_cameraTransform;
+					
+					// reset position/rotation
 					CameraManager.Instance.GameCamera.transform.localPosition = Vector3.zero;
 					CameraManager.Instance.GameCamera.transform.localRotation = Quaternion.identity;
 				}
@@ -81,16 +89,19 @@ namespace Casper.TBFPS
 					DebugUtil.LogError("Could not find GameCamera");
 				}
 				
-				m_mouseLookComponent.enabled = true;
-				m_playerMovementComponent.enabled = false;
-				
+				// filter our player model visibility with a layer
 				LayerUtil.ChangeLayersRecursively(m_playerModel, "Player");
+				
+				// enable mouse
+				m_mouseLookComponent.enabled 		= true;
 			}
 			else
 			{
-				m_mouseLookComponent.enabled = false;
-				m_playerMovementComponent.enabled = false;
+				m_mouseLookComponent.enabled 		= false;
 			}
+			
+			m_playerAimComponent.enabled 		= false;
+			m_playerMovementComponent.enabled 	= false;
 		}
 		
 		// public methods

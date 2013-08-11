@@ -1,6 +1,6 @@
 ﻿/*
 	Author	: Casper van Beuzekom
-	Date	: 2013-08-10
+	Date	: 2013-08-11
 	
 	Copyright (c) Casper van Beuzekom
 	All rights reserved.
@@ -13,10 +13,10 @@ using Casper.Framework;
 
 namespace Casper.TBFPS
 {
-	public class MoveAction : Action
+	public class AttackAction : Action
 	{
 		#region constructor
-		public MoveAction(PlayerEntity playerEntity) : base(playerEntity)
+		public AttackAction(PlayerEntity playerEntity) : base(playerEntity)
 		{
 		}
 		#endregion
@@ -26,9 +26,9 @@ namespace Casper.TBFPS
 		{
 			DebugUtil.Log(this.GetType().Name + " started");
 			
-			m_playerEntity.PlayerMovementComponent.enabled = true;
+			m_playerEntity.PlayerAimComponent.enabled = true;
 			
-			m_playerEntity.PlayerMovementComponent.OnMovementCompleted += Finish;
+			m_playerEntity.PlayerAimComponent.OnShotFired += Finish;
 		}
 		
 		public override void Update()
@@ -39,9 +39,9 @@ namespace Casper.TBFPS
 		{
 			DebugUtil.Log(this.GetType().Name + " finished");
 			
-			m_playerEntity.PlayerMovementComponent.OnMovementCompleted -= Finish;
+			m_playerEntity.PlayerAimComponent.OnShotFired -= Finish;
 			
-			m_playerEntity.PlayerMovementComponent.enabled = false;
+			m_playerEntity.PlayerAimComponent.enabled = false;
 			
 			base.Finish();
 		}

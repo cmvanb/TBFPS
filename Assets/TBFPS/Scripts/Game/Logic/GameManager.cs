@@ -69,6 +69,8 @@ namespace Casper.TBFPS
 			else if (index == 1)
 			{
 				DebugUtil.Log(this.GetType().Name + " selected attack action");
+			
+				StartAction(new AttackAction(m_activePlayer));
 			}
 			else if (index == 2)
 			{
@@ -186,6 +188,7 @@ namespace Casper.TBFPS
 			if (m_activePlayer.ActionPoints <= 0)
 			{
 				// end turn
+				DebugUtil.Log("End of turn for " + m_activePlayer.Name);
 			}
 			else
 			{
