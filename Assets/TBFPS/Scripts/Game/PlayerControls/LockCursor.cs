@@ -16,9 +16,11 @@ namespace Casper.TBFPS
 	{
 		// events
 	
-		// public vars
+		#region public vars
+		#endregion
 		
-		// private vars
+		#region private vars
+		#endregion
 		
 		// unity callbacks
 		void Awake()

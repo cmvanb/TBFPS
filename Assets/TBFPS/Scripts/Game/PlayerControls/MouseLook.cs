@@ -16,7 +16,7 @@ namespace Casper.TBFPS
 	{
 		// events
 		
-		// inspector vars
+		#region inspector vars
 		[SerializeField]
 		private Transform m_playerBody;
 		
@@ -31,10 +31,9 @@ namespace Casper.TBFPS
 		
 		[SerializeField]
 		private Vector2 m_rotationYawLimit 		= new Vector2(-360f, 360f);
+		#endregion
 		
-		// public vars
-		
-		// private vars
+		#region private vars
 		private Vector2 m_mouseMovement;
 		
 		private float m_pitch;
@@ -42,6 +41,7 @@ namespace Casper.TBFPS
 		private float m_yaw;
 		
 		private Vector2 m_initialYawPitch;
+		#endregion
 		
 		// unity callbacks
 		void Awake()
