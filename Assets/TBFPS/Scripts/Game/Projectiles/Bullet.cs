@@ -17,6 +17,9 @@ namespace Casper.TBFPS
 		#region inspector vars
 		[SerializeField]
 		private GameObject m_hitSmokePrefab;
+		
+		[SerializeField]
+		private float m_damage;
 		#endregion
 			
 		#region unity callbacks
@@ -33,10 +36,13 @@ namespace Casper.TBFPS
 				hitSmoke.transform.position = hit.point;
 				hitSmoke.transform.LookAt(hit.point + hit.normal);
 				
-				Debug.DrawLine(transform.position, hit.point, Color.red);
-			
-				Debug.Break();
-			}
+				Health healthOfHitObject = hit.transform.GetComponent<Health>();
+				
+				if (healthOfHitObject != null)
+				{
+					healthOfHitObject.TakeDamage(m_damage);
+				}
+			}			
 		}
 		#endregion
 	}

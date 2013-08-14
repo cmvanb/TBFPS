@@ -35,6 +35,9 @@ namespace Casper.TBFPS
 		public PlayerAim PlayerAimComponent { get { return m_playerAimComponent; } }
 		
 		[SerializeField]
+		private Health m_healthComponent;
+		
+		[SerializeField]
 		private Transform m_cameraTransform;
 		
 		[SerializeField]
@@ -100,11 +103,19 @@ namespace Casper.TBFPS
 				m_mouseLookComponent.enabled 		= false;
 			}
 			
-			m_playerAimComponent.enabled 		= false;
-			m_playerMovementComponent.enabled 	= false;
+			m_playerAimComponent.enabled 			= false;
+			m_playerMovementComponent.enabled 		= false;
+			
+			// listen for my own death
+			m_healthComponent.OnDied += new Health.DiedHandler(Died);
 		}
 		
 		// public methods
+		public void Died()
+		{
+			Debug.Log(m_name + " died");
+			gameObject.SetActive(false);
+		}
 		
 		// private methods
 	}

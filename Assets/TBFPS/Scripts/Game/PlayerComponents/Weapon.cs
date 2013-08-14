@@ -97,14 +97,14 @@ namespace Casper.TBFPS
 			GameObject muzzleFlash = Object.Instantiate(m_muzzleFlashPrefab) as GameObject;
 			muzzleFlash.transform.position = m_weaponObject.transform.position;
 			muzzleFlash.transform.rotation = m_weaponObject.transform.rotation;
-			muzzleFlash.transform.Translate(muzzleFlash.transform.forward * 10f);
-			
-			Debug.DrawLine(m_weaponObject.transform.position, muzzleFlash.transform.position, Color.yellow);
+			muzzleFlash.transform.Translate(Vector3.forward * 0.25f);
+			muzzleFlash.transform.Translate(Vector3.up * 0.05f);
 			
 			// instantiate bullet at muzzle
 			GameObject bullet = Object.Instantiate(m_bulletPrefab) as GameObject;
 			bullet.transform.position = m_weaponObject.transform.position;
-			bullet.transform.rotation = m_weaponObject.transform.rotation;			
+			bullet.transform.rotation = m_weaponObject.transform.rotation;	
+			bullet.transform.Translate(Vector3.forward * 0.25f);
 		}
 		#endregion
 		

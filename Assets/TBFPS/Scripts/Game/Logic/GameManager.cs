@@ -100,14 +100,12 @@ namespace Casper.TBFPS
 				{
 					m_activePlayer = m_players[0];
 					
-					foreach (PlayerEntity player in m_players)
+					for (int i = 0; i < m_players.Count; ++i)
 					{
-						if (player != m_activePlayer)
+						if (m_players[i] != m_activePlayer
+							&& m_players[i].IsLocalPlayer)
 						{
-							if (player.IsLocalPlayer)
-							{
-								player.LocalActionsHUD.enabled = false;
-							}
+							m_players[i].LocalActionsHUD.enabled = false;
 						}
 					}
 				}
